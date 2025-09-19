@@ -12,15 +12,31 @@ to_date = now.isoformat(timespec="seconds")
 
 url = (
     f"https://newsapi.org/v2/top-headlines?"
-    f"language=en&pageSize=30&apiKey={API_KEY}"
+    f"language=en&pageSize=15&apiKey={API_KEY}"
 )
 
 response = requests.get(url).json()
 
 
-content = [article.get("content") for article in response.get("articles", [])]
+for i, article in enumerate(response.get("articles", []), start=1):
+    print(f"{i}. {article['title']} ({article['source']['name']})")
+    print(article["url"])
+
+    print()
+
+#put it in a list of tuples (title, content, URL)
+content = []
+for article in response.get("articles", []):
+    title = article["title"]
+    link = article["url"]
+
+    
+    full_text = article.get("content")
+
+    content.append((title, full_text, link))
 
 with open("content.json", 'w') as f:
     json.dump(content, f)
+
 
 #do specific request based on the portfolio
