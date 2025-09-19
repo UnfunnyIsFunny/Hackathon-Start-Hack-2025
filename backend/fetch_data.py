@@ -10,9 +10,8 @@ from_date = yesterday.isoformat(timespec="seconds")
 to_date = now.isoformat(timespec="seconds")
 # Build request
 url = (
-    f"https://newsapi.org/v2/everything?"
-    f"q=*&from={from_date}&to={to_date}&"
-    f"language=en&sortBy=popularity&pageSize=10&apiKey={API_KEY}"
+    f"https://newsapi.org/v2/top-headlines?"
+    f"language=en&pageSize=10&apiKey={API_KEY}"
 )
 
 response = requests.get(url).json()
