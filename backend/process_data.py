@@ -8,10 +8,10 @@ import ast
 
 
 
-CONCURRENT_REQUESTS = 10
+CONCURRENT_REQUESTS = 5
 portfolios = "Equities: USA, Europe, Asia, Emerging Markets; Bonds: Global Government, Global Corporate bonds; Gold, FX: USD, EUR, CHF, JPY; Cryptocurrencies" 
 
-
+    
 # Define an async function to process a single article
 async def process_article(client: AsyncOpenAI, article_content: str, portfolios: str, semaphore: asyncio.Semaphore):
     """Sends a single article to Groq and returns the summary."""
@@ -21,7 +21,7 @@ async def process_article(client: AsyncOpenAI, article_content: str, portfolios:
     Regular events like earnings reports or market trends should not be considered relevant unless they include unexpected information.
     Analyze the provided news article and respond in JSON format with two fields:
     1.  "is_relevant": ranges between "not relevant", "somewhat relevant", "relevant", "highly relevant".
-    2.  "reason": A brief, one-sentence explanation for your decision.
+    2.  "summary": A brief, objective summary of the article without any interpretations.
     :\n\n{article_content}
     """
     role = f"You are looking to invest in {portfolios}. You will be provided with news articles. Your task is to determine if the article is relevant for potential investments in these portfolios." 

@@ -2,7 +2,7 @@ from datetime import datetime, timedelta, UTC
 import json
 from newsapi import NewsApiClient
 import time
-
+ 
 KEYWORDS_FILE = "keywords.json"
 CONTENT_FILE = "content.json"
 newsapi = NewsApiClient(api_key="9d702e3dd4c845fb821fd11840eb3f6a")
