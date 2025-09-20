@@ -17,35 +17,35 @@ def load_keywords():
 def fetch_specific():
 
     content = []
-    while True:
-        keywords = load_keywords()
+    keywords = load_keywords()      
+    keywords = load_keywords()
 
-        now = datetime.now(UTC)
-        yesterday = now - timedelta(days=1)  # Fixed: days=1 not day=1
+    now = datetime.now(UTC)
+    yesterday = now - timedelta(days=1)  # Fixed: days=1 not day=1
 
-        from_date = yesterday.strftime("%Y-%m-%d")
-        to_date = now.strftime("%Y-%m-%d")
-        for keyword in keywords:
-            top_headlines = newsapi.get_everything(q=keyword,
-                                                    language='en',
-                                                    page_size=5,
-                                                    from_param=from_date,
-                                                    to=to_date
-                                                    )
+    from_date = yesterday.strftime("%Y-%m-%d")
+    to_date = now.strftime("%Y-%m-%d")
+    for keyword in keywords:
+        top_headlines = newsapi.get_everything(q=keyword,
+                                                language='en',
+                                                page_size=5,
+                                                from_param=from_date,
+                                                to=to_date
+                                                )
 
-            for source in top_headlines.get("articles", []):
-                title = source["title"]
-                link = source["url"]
+        for source in top_headlines.get("articles", []):
+            title = source["title"]
+            link = source["url"]
 
-                full_text = source.get("content") or ""
-                date = source.get("publishedAt")
-                content.append((title, full_text, link, date))
+            full_text = source.get("content") or ""
+            date = source.get("publishedAt")
+            content.append((title, full_text, link, date))
 
-                print(source["title"])
-                print(source["url"])
-                print()
-        with open(CONTENT_FILE, 'w') as f:
-            json.dump(content, f)
-        time.sleep(3600)
+            print(source["title"])
+            print(source["url"])
+            print()
+    with open(CONTENT_FILE, 'w') as f:
+        json.dump(content, f)
+    
 
 fetch_specific()
