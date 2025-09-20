@@ -1,42 +1,36 @@
 import requests
 from datetime import datetime, timedelta, UTC
 import json
-API_KEY = "f7b0035f08c54269ba5a1dc67f3f8053"
+from newsapi import NewsApiClient
 
-# do a request for the top 10 popular news of the day
+newsapi = NewsApiClient(api_key="9d702e3dd4c845fb821fd11840eb3f6a")
+#dates
 now = datetime.now(UTC)
 yesterday = now - timedelta(days=1)
 
 from_date = yesterday.isoformat(timespec="seconds")
 to_date = now.isoformat(timespec="seconds")
 
-url = (
-    f"https://newsapi.org/v2/top-headlines?"
-    f"language=en&pageSize=15&apiKey={API_KEY}"
-)
 
-response = requests.get(url).json()
+#collect articles with keywords
+def fetch_specific(portfolio_keywords):
+    content = []
+    for keyword in portfolio_keywords:
+        top_headlines = newsapi.get_everything(q=keyword,
+                                               language='en')
 
+        for source in top_headlines.get("articles", []):
+            title = source["title"]
+            link = source["url"]
 
-for i, article in enumerate(response.get("articles", []), start=1):
-    print(f"{i}. {article['title']} ({article['source']['name']})")
-    print(article["url"])
+            full_text = source.get("content") or ""
+            content.append((title, full_text, link))
 
-    print()
+            print(source["title"])
+            print(source["url"])
+            print()
+    with open("content.json", 'w') as f:
+        json.dump(content, f)
 
-#put it in a list of tuples (title, content, URL)
-content = []
-for article in response.get("articles", []):
-    title = article["title"]
-    link = article["url"]
-
-    
-    full_text = article.get("content")
-
-    content.append((title, full_text, link))
-
-with open("content.json", 'w') as f:
-    json.dump(content, f)
-
-
-#do specific request based on the portfolio
+portfolio_keywords = ["bitcoin", "china"]
+fetch_specific(portfolio_keywords)
