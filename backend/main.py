@@ -8,8 +8,8 @@ import ast
 
 
 
-CONCURRENT_REQUESTS = 30
-portfolios = "Equities: USA, Europe, Asia, Emerging Markets; Bonds: Global Government, Global Corporate bonds; Gold, FX: USD, EUR, CHF, JPY"
+CONCURRENT_REQUESTS = 10
+portfolios = "Equities: USA, Europe, Asia, Emerging Markets; Bonds: Global Government, Global Corporate bonds; Gold, FX: USD, EUR, CHF, JPY; Cryptocurrencies" 
 
 
 # Define an async function to process a single article

@@ -17,7 +17,7 @@ def fetch_specific(portfolio_keywords):
     content = []
     for keyword in portfolio_keywords:
         top_headlines = newsapi.get_everything(q=keyword,
-                                               language='en')
+                                               language='en', page_size=5)
 
         for source in top_headlines.get("articles", []):
             title = source["title"]
