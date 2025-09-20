@@ -1,0 +1,33 @@
+<h1>Customers</h1>
+<div style="margin-bottom: 20px;">
+        <a href="{% url 'add_customer' %}">
+            <button style="padding: 10px 20px; font-size: 16px;">Add Customer</button>
+        </a>
+        <a href="{% url 'bulk_delete_customers' %}">
+            <button style="padding: 10px 20px; font-size: 16px; background-color: rgb(51, 0, 255); color: white;">Delete Customers</button>
+        </a>
+</div>
+<table style="width: 100%; border-collapse: collapse; font-size: 18px; margin-top: 20px;">
+    <tr style="background-color: #f2f2f2;">
+        <th style="padding: 12px; border: 1px solid #000;">ID</th>
+        <th style="padding: 12px; border: 1px solid #000;">First Name</th>
+        <th style="padding: 12px; border: 1px solid #000;">Last Name</th>
+        <th style="padding: 12px; border: 1px solid #000;">Portfolio</th>
+    </tr>
+    {% for customer in customers %}
+    <tr>
+        <td style="padding: 12px; border: 1px solid #000;">{{ customer.id}}</td>
+        <td style="padding: 12px; border: 1px solid #000;">{{ customer.firstname }}</td>
+        <td style="padding: 12px; border: 1px solid #000;">{{ customer.lastname }}</td>
+        <td style="padding: 12px; border: 1px solid #000;">
+            <a href="{% url 'customer_detail' customer.id %}" style="color: blue; text-decoration: underline;">
+                here
+            </a>
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="4" style="padding: 12px; border: 1px solid #000;">No customers found.</td>
+    </tr>
+    {% endfor %}
+</table>

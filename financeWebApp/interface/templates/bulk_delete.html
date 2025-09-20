@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Delete Customers</title>
+</head>
+<body>
+    <h1>Delete Customers</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <table border="1" cellpadding="10">
+            <tr>
+                <th>Select</th>
+                <th>ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Portfolio</th>
+            </tr>
+            {% for customer in customers %}
+            <tr>
+                <td><input type="checkbox" name="customers" value="{{ customer.id }}"></td>
+                <td>{{ customer.id }}</td>
+                <td>{{ customer.firstname }}</td>
+                <td>{{ customer.lastname }}</td>
+                <td>{{ customer.portfolio }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        <button type="submit" style="background-color:red;color:white;">Delete Selected</button>
+        <a href="{% url 'home' %}"><button type="button">Cancel</button></a>
+    </form>
+</body>
+</html>

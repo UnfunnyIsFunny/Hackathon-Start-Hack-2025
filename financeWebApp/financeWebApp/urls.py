@@ -20,7 +20,9 @@ from interface import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.article_list, name='article_list'),
-    path('customer/<int:customer_id>/', views.view_customer, name='view_customer'),
-    path('portfolio/<int:portfolio_id>/', views.view_portfolio, name='view_portfolio')
+    path('', views.home, name='home'),
+    path('portfolio/<int:portfolio_id>/', views.view_portfolio, name='view_portfolio'),
+    path('add-customer/', views.add_customer, name='add_customer'),
+    path('delete-customers/', views.bulk_delete_customers, name='bulk_delete_customers'),
+    path('customer/<int:pk>/', views.customer_detail, name='customer_detail'),
 ]
