@@ -1,38 +1,46 @@
-import requests
 from datetime import datetime, timedelta, UTC
 import json
 from newsapi import NewsApiClient
-import sys
+import time
 
+KEYWORDS_FILE = "keywords.json"
+CONTENT_FILE = "content.json"
 newsapi = NewsApiClient(api_key="9d702e3dd4c845fb821fd11840eb3f6a")
-#dates
-now = datetime.now(UTC)
-yesterday = now - timedelta(days=1)
 
-from_date = yesterday.isoformat(timespec="seconds")
-to_date = now.isoformat(timespec="seconds")
+def load_keywords():
+    with open(KEYWORDS_FILE, "r") as f:
+        return json.load(f)
 
+#collect articles with keywords every hours
+def fetch_specific():
 
-#collect articles with keywords
-def fetch_specific(portfolio_keywords):
     content = []
-    for keyword in portfolio_keywords:
-        top_headlines = newsapi.get_everything(q=keyword,
-                                               language='en', page_size=5)
+    while True:
+        keywords = load_keywords()
 
-        for source in top_headlines.get("articles", []):
-            title = source["title"]
-            link = source["url"]
+        now = datetime.now(UTC)
+        yesterday = now - timedelta(days=1)  # Fixed: days=1 not day=1
 
-            full_text = source.get("content") or ""
-            content.append((title, full_text, link))
+        from_date = yesterday.strftime("%Y-%m-%d")
+        to_date = now.strftime("%Y-%m-%d")
+        for keyword in keywords:
+            top_headlines = newsapi.get_everything(q=keyword,
+                                                    language='en',
+                                                    page_size=5,
+                                                    from_param=from_date,
+                                                    to=to_date
+                                                    )
 
-            print(source["title"])
-            print(source["url"])
-            print()
-    with open("content.json", 'w') as f:
-        json.dump(content, f)
+            for source in top_headlines.get("articles", []):
+                title = source["title"]
+                link = source["url"]
 
-if __name__ == "__main__":
-    portfolio_keywords = sys.argv[1].split(',')
-    fetch_specific(portfolio_keywords)
+                full_text = source.get("content") or ""
+                content.append((title, full_text, link))
+
+                print(source["title"])
+                print(source["url"])
+                print()
+        time.sleep(3600)
+        with open("content.json", 'w') as f:
+            json.dump(content, f)
