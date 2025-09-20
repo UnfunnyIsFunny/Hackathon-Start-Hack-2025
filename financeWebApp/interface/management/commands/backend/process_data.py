@@ -88,16 +88,17 @@ async def main(portfolio):
         content = ast.literal_eval(result)['summary']  
         url = article[2]
         date = article[3]
-        verdict = ast.literal_eval(result)['is_relevant']       
-        await sync_to_async(Article.objects.create)(
-                    name=title,
-                    content=content,
-                    url=url,
-                    portfolio=portfolio,
-                    date=date,
-                    verdict=verdict
-            )
-         
+        verdict = ast.literal_eval(result)['is_relevant']  
+        if verdict != "not relevant":     
+            await sync_to_async(Article.objects.create)(
+                        name=title,
+                        content=content,
+                        url=url,
+                        portfolio=portfolio,
+                        date=date,
+                        verdict=verdict
+                )
+            
 
     # print("Example summary:", successful_results[0] if successful_results else "No results.")
     
