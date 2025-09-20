@@ -15,7 +15,13 @@ dirname = os.path.dirname(__file__)
 RESULTS_FILE = os.path.join(dirname, '../data_transfer/relevant_articles.json')
 CONTENT_FILE = os.path.join(dirname, '../data_transfer/content.json') 
 
-CONCURRENT_REQUESTS = 5
+
+# --- Rate limiting config ---
+TOKENS_PER_MINUTE = 6000
+TOKENS_PER_REQUEST = 300  # Adjust this estimate as needed
+CONCURRENT_REQUESTS = 1  # To ensure serial processing for rate limiting
+max_requests_per_minute = TOKENS_PER_MINUTE // TOKENS_PER_REQUEST
+delay_between_requests = 60 / max_requests_per_minute
 
     
 # Define an async function to process a single article
@@ -59,14 +65,16 @@ async def main(portfolio):
     # Create the asynchronous client
     client = AsyncOpenAI(api_key=os.getenv('GROQ_API_KEY'), base_url="https://api.groq.com/openai/v1")
     
+
     # Create the semaphore
     semaphore = asyncio.Semaphore(CONCURRENT_REQUESTS)
 
-    # Create a list of tasks to run concurrently
-    tasks = [process_article(client, article, portfolio.assets, semaphore) for article in articles_to_process]
-    
-    # Run all tasks and wait for them to complete
-    results = await asyncio.gather(*tasks)
+    results = []
+    for i, article in enumerate(articles_to_process):
+        if i > 0:
+            await asyncio.sleep(delay_between_requests)
+        result = await process_article(client, article, portfolio.assets, semaphore)
+        results.append(result)
 
     end_time = time.time()
 

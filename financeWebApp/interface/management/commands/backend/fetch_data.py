@@ -11,7 +11,7 @@ dirname = os.path.dirname(__file__)
 KEYWORDS_FILE = os.path.join(dirname, '../data_transfer/keywords.json')
 CONTENT_FILE = os.path.join(dirname, '../data_transfer/content.json') 
 
-newsapi = NewsApiClient(api_key="9d702e3dd4c845fb821fd11840eb3f6a")
+newsapi = NewsApiClient(api_key="7518dca56f314bef898357616ee86dc2")#"9d702e3dd4c845fb821fd11840eb3f6a")
 
 def load_keywords():
     keywords = []
