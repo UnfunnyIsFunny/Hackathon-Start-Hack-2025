@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View Customer</title>
+    <style>
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ccc; padding: 8px; }
+        th { background: #eee; }
+    </style>
+</head>
+<body>
+    <h1>Customer {{ customer.firstname }} {{ customer.lastname }}</h1>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>First name</th>
+            <th>Last name</th>
+            <th>Portfolio List</th>
+        </tr>
+       
+        <tr>
+            <td>{{ customer.id }}</td>
+            <td>{{ customer.firstname }}</td>
+            <td>{{ customer.lastname }}</td>
+            <td>
+                <ul>
+                    {% for portfolio in portfolios %}
+                    <li><a href="/portfolio/{{ portfolio.id }}/" target="_blank">{{ portfolio.name }}</a></li>
+                    {% empty %}
+                    <li>No portfolios found.</li>
+                    {% endfor %}
+                </ul>
+            </td>
+        </tr>
+      
+    </table>
+</body>
+</html>
+
+</body>
+</html>

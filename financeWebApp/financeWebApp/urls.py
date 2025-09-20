@@ -20,5 +20,7 @@ from interface import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.article_list, name='article_list')
+    path('', views.article_list, name='article_list'),
+    path('customer/<int:customer_id>/', views.view_customer, name='view_customer'),
+    path('portfolio/<int:portfolio_id>/', views.view_portfolio, name='view_portfolio')
 ]
