@@ -3,7 +3,8 @@ from django.core.management.base import BaseCommand
 import sys
 import subprocess
 sys.path.append('..')
-from ..backend import fetch_data, process_data
+from backend import fetch_data, process_data 
+
 class Command(BaseCommand):
     help = 'Runs the activate method on my static service object'
 

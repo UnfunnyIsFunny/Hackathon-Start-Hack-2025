@@ -2,9 +2,11 @@ from datetime import datetime, timedelta, UTC
 import json
 from newsapi import NewsApiClient
 import time
- 
-KEYWORDS_FILE = "keywords.json"
-CONTENT_FILE = "content.json"
+import os
+dirname = os.path.dirname(__file__)
+KEYWORDS_FILE = os.path.join(dirname, '../data_transfer/keywords.json')
+CONTENT_FILE = os.path.join(dirname, '../data_transfer/content.json') 
+
 newsapi = NewsApiClient(api_key="9d702e3dd4c845fb821fd11840eb3f6a")
 
 def load_keywords():
@@ -42,7 +44,7 @@ def fetch_specific():
                 print(source["title"])
                 print(source["url"])
                 print()
-        with open("content.json", 'w') as f:
+        with open(CONTENT_FILE, 'w') as f:
             json.dump(content, f)
         time.sleep(3600)
 

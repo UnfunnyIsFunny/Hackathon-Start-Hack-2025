@@ -5,8 +5,10 @@ import time
 import json
 import requests
 import ast
+dirname = os.path.dirname(__file__)
 
-
+RESULTS_FILE = os.path.join(dirname, '../data_transfer/relevant_articles.json')
+CONTENT_FILE = os.path.join(dirname, '../data_transfer/content.json') 
 
 CONCURRENT_REQUESTS = 5
 portfolios = "Equities: USA, Europe, Asia, Emerging Markets; Bonds: Global Government, Global Corporate bonds; Gold, FX: USD, EUR, CHF, JPY; Cryptocurrencies" 
@@ -44,9 +46,9 @@ async def main():
     """Main function to run the concurrent processing."""
     
     # In a real application, you would fetch these from a news API or database
-    articles_to_process_json = json.load(open("content.json"))
-    articles_to_process = [f"Title: {title}\nContent: {content}" for title, content, url in articles_to_process_json if content]
-    urls = [f"URL: {url}" for title, content, url in articles_to_process_json if content]
+    articles_to_process_json = json.load(open(CONTENT_FILE))
+    articles_to_process = [f"Title: {title}\nContent: {content}" for title, content, url, date  in articles_to_process_json if content]
+    urls = [f"URL: {url}" for title, content, url, date in articles_to_process_json if content]
 
     print(f"Starting processing for {len(articles_to_process)} articles...")
     start_time = time.time()
@@ -76,7 +78,7 @@ async def main():
     successful_results = [result[result.find('{'):result.rfind('}')+1].replace('```json', '').replace('```', '') for result in successful_results]
     
    
-    with open('relevant_articles.json', 'w') as f:
+    with open(RESULTS_FILE, 'w') as f:
         json.dump(successful_results, f)
 
     # print("Example summary:", successful_results[0] if successful_results else "No results.")
@@ -84,8 +86,8 @@ async def main():
 if __name__ == "__main__":
     import sys
     asyncio.run(main())
-    successful_results = json.load(open('relevant_articles.json'))
-    articles_to_process_json = json.load(open("content.json"))
+    successful_results = json.load(open(RESULTS_FILE))
+    articles_to_process_json = json.load(open(CONTENT_FILE))
     for (article, result) in zip(articles_to_process_json, successful_results):
         title = article[0]
         verdict = ast.literal_eval(result)['is_relevant']
