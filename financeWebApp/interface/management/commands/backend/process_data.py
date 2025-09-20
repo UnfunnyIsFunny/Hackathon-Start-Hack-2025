@@ -85,7 +85,7 @@ async def main(portfolio):
         json.dump(successful_results, f)
     for article, result in zip(articles_to_process_json, successful_results):
         title = article[0]
-        content = article[1]
+        content = ast.literal_eval(result)['summary']  
         url = article[2]
         date = article[3]
         verdict = ast.literal_eval(result)['is_relevant']       

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>All Articles</title>
+    <style>
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ccc; padding: 8px; }
+        th { background: #eee; }
+    </style>
+</head>
+<body>
+    <h1>All Articles</h1>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Content</th>
+            <th>URL</th>
+            <th>Portfolio</th>
+            <th>Date</th>
+            <th>Verdict</th>
+        </tr>
+        {% for article in articles %}
+        <tr>
+            <td>{{ article.id }}</td>
+            <td>{{ article.name }}</td>
+            <td>{{ article.content|truncatechars:100 }}</td>
+            <td><a href="{{ article.url }}" target="_blank">link</a></td>
+            <td>{{ article.portfolio }}</td>
+            <td>{{ article.date }}</td>
+            <td>{{ article.verdict }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7">No articles found.</td></tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
