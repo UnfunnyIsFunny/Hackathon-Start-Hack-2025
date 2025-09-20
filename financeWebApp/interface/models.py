@@ -7,3 +7,11 @@ class Article(models.Model):
     url = models.URLField(max_length=200)
     portfolio = models.TextField()  
     date = models.DateTimeField(auto_now_add=True)  
+    verdict = models.CharField(max_length=100, blank=True, null=True)
+
+class Portfolio(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    assets = models.TextField(help_text="Comma-separated list of assets, e.g. Bitcoin, USD, Gold")
+
+    def __str__(self):
+        return self.name

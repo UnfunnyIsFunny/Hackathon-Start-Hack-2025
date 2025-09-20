@@ -5,13 +5,17 @@ import time
 import json
 import requests
 import ast
+import sys
+sys.path.append('....')
+from ....models import Article
+from asgiref.sync import sync_to_async
 dirname = os.path.dirname(__file__)
+
 
 RESULTS_FILE = os.path.join(dirname, '../data_transfer/relevant_articles.json')
 CONTENT_FILE = os.path.join(dirname, '../data_transfer/content.json') 
 
 CONCURRENT_REQUESTS = 5
-portfolios = "Equities: USA, Europe, Asia, Emerging Markets; Bonds: Global Government, Global Corporate bonds; Gold, FX: USD, EUR, CHF, JPY; Cryptocurrencies" 
 
     
 # Define an async function to process a single article
@@ -42,10 +46,9 @@ async def process_article(client: AsyncOpenAI, article_content: str, portfolios:
             print(f"An error occurred: {e}")
             return None # Return None on failure
 
-async def main():
+async def main(portfolio):
     """Main function to run the concurrent processing."""
     
-    # In a real application, you would fetch these from a news API or database
     articles_to_process_json = json.load(open(CONTENT_FILE))
     articles_to_process = [f"Title: {title}\nContent: {content}" for title, content, url, date  in articles_to_process_json if content]
     urls = [f"URL: {url}" for title, content, url, date in articles_to_process_json if content]
@@ -60,7 +63,7 @@ async def main():
     semaphore = asyncio.Semaphore(CONCURRENT_REQUESTS)
 
     # Create a list of tasks to run concurrently
-    tasks = [process_article(client, article, portfolios, semaphore) for article in articles_to_process]
+    tasks = [process_article(client, article, portfolio.assets, semaphore) for article in articles_to_process]
     
     # Run all tasks and wait for them to complete
     results = await asyncio.gather(*tasks)
@@ -80,6 +83,21 @@ async def main():
    
     with open(RESULTS_FILE, 'w') as f:
         json.dump(successful_results, f)
+    for article, result in zip(articles_to_process_json, successful_results):
+        title = article[0]
+        content = article[1]
+        url = article[2]
+        date = article[3]
+        verdict = ast.literal_eval(result)['is_relevant']       
+        await sync_to_async(Article.objects.create)(
+                    name=title,
+                    content=content,
+                    url=url,
+                    portfolio=portfolio,
+                    date=date,
+                    verdict=verdict
+            )
+         
 
     # print("Example summary:", successful_results[0] if successful_results else "No results.")
     
