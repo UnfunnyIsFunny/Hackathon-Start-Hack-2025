@@ -36,11 +36,14 @@ def fetch_specific():
                 link = source["url"]
 
                 full_text = source.get("content") or ""
-                content.append((title, full_text, link))
+                date = source.get("publishedAt")
+                content.append((title, full_text, link, date))
 
                 print(source["title"])
                 print(source["url"])
                 print()
-        time.sleep(3600)
         with open("content.json", 'w') as f:
             json.dump(content, f)
+        time.sleep(3600)
+
+fetch_specific()
