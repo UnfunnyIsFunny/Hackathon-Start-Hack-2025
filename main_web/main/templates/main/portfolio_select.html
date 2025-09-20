@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h2>Select or Create Portfolio</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit</button>
+  </form>
+  <h3>Or select an existing portfolio:</h3>
+  <ul>
+    {% for portfolio in portfolios %}
+      <li>
+        <form method="post" style="display:inline;">
+          {% csrf_token %}
+          <input type="hidden" name="portfolio_id" value="{{ portfolio.id }}">
+          <button type="submit">{{ portfolio.name }}</button>
+        </form>
+      </li>
+    {% empty %}
+      <li>No portfolios yet.</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

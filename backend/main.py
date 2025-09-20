@@ -81,7 +81,8 @@ async def main():
 
     # print("Example summary:", successful_results[0] if successful_results else "No results.")
     
-if __name__ == "__main__":    
+if __name__ == "__main__":
+    import sys
     asyncio.run(main())
     successful_results = json.load(open('relevant_articles.json'))
     articles_to_process_json = json.load(open("content.json"))

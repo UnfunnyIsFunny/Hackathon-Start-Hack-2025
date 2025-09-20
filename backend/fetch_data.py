@@ -2,6 +2,7 @@ import requests
 from datetime import datetime, timedelta, UTC
 import json
 from newsapi import NewsApiClient
+import sys
 
 newsapi = NewsApiClient(api_key="9d702e3dd4c845fb821fd11840eb3f6a")
 #dates
@@ -32,5 +33,6 @@ def fetch_specific(portfolio_keywords):
     with open("content.json", 'w') as f:
         json.dump(content, f)
 
-portfolio_keywords = ["bitcoin", "china"]
-fetch_specific(portfolio_keywords)
+if __name__ == "__main__":
+    portfolio_keywords = sys.argv[1].split(',')
+    fetch_specific(portfolio_keywords)
