@@ -1,5 +1,4 @@
 import os
-# Must be after dirname is defined
 
 import os
 import asyncio
@@ -40,15 +39,13 @@ async def process_filing(client, filing_content, semaphore):
             print(f"Filing error: {e}")
             return None
 
-# --- Rate limiting config ---
 TOKENS_PER_MINUTE = 6000
-TOKENS_PER_REQUEST = 300  # Adjust this estimate as needed
-CONCURRENT_REQUESTS = 1  # To ensure serial processing for rate limiting
+TOKENS_PER_REQUEST = 300
+CONCURRENT_REQUESTS = 1
 max_requests_per_minute = TOKENS_PER_MINUTE // TOKENS_PER_REQUEST
 delay_between_requests = 60 / max_requests_per_minute
 
     
-# Define an async function to process a single article
 async def process_article(client: AsyncOpenAI, article_content: str, portfolios: str, semaphore: asyncio.Semaphore):
     
     """Sends a single article to Groq and returns the summary."""
@@ -62,7 +59,6 @@ async def process_article(client: AsyncOpenAI, article_content: str, portfolios:
     :\n\n{article_content}
     """
     role = f"You are looking to invest in {portfolios}. You will be provided with news articles. Your task is to determine if the article is relevant for potential investments in these portfolios." 
-    # The 'async with' statement waits for a slot to open in the semaphore.
     async with semaphore:
         try:
             print(f"Processing article...")
@@ -75,7 +71,7 @@ async def process_article(client: AsyncOpenAI, article_content: str, portfolios:
             return chat_completion.choices[0].message.content
         except Exception as e:
             print(f"An error occurred: {e}")
-            return None # Return None on failure
+            return None
 
 async def main(portfolio):
     """Main function to run the concurrent processing."""
@@ -87,13 +83,10 @@ async def main(portfolio):
     print(f"Starting processing for {len(articles_to_process)} articles...")
     start_time = time.time()
 
-    # Create the asynchronous client
     client = AsyncOpenAI(api_key=os.getenv('GROQ_API_KEY'), base_url="https://api.groq.com/openai/v1")
 
-    # Create the semaphore
     semaphore = asyncio.Semaphore(CONCURRENT_REQUESTS)
 
-    # --- Article processing (unchanged) ---
     results = []
     for i, article in enumerate(articles_to_process):
         if i > 0:
@@ -103,7 +96,6 @@ async def main(portfolio):
 
     end_time = time.time()
 
-    # Filter out any failed results (which we set to None)
     successful_results = [res for res in results if res is not None]
 
     print("-" * 50)
@@ -122,7 +114,6 @@ async def main(portfolio):
         date = article[3]
         verdict = ast.literal_eval(result)['is_relevant']  
         if verdict != "not relevant":
-            # Prevent duplicate articles by name AND portfolio
             exists = await sync_to_async(Article.objects.filter(name=title, portfolio=str(portfolio)).exists)()
             if not exists:
                 await sync_to_async(Article.objects.create)(
@@ -134,7 +125,6 @@ async def main(portfolio):
                     verdict=verdict
                 )
 
-    # --- Filing processing ---
     if os.path.exists(FILINGS_FILE):
         with open(FILINGS_FILE) as f:
             filings = json.load(f)
@@ -144,7 +134,6 @@ async def main(portfolio):
                 await asyncio.sleep(delay_between_requests)
             filing_content = f"Company: {filing['companyName']}\nDate: {filing['date']}\nContent: {filing['content']}"
             result = await process_filing(client, filing_content, semaphore)
-            # Parse LLM result
             try:
                 llm_data = ast.literal_eval(result[result.find('{'):result.rfind('}')+1].replace('```json', '').replace('```', '')) if result else {}
             except Exception:
@@ -152,7 +141,6 @@ async def main(portfolio):
             summary = llm_data.get('summary', '')
             verdict = str(llm_data.get('significance_score', ''))
             from ....models import Filing
-            # Prevent duplicate filings by company and date
             date_val = None
             if 'date' in filing and filing['date']:
                 try:

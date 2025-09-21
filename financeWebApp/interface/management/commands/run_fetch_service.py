@@ -15,7 +15,6 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS('Starting my service...'))
         try:
             while True:
-                # This is where your long-running method is called
                 fetch_data.load_keywords()
                 fetch_data.fetch_specific()
                 fetch_data.fetch_sec_filings()

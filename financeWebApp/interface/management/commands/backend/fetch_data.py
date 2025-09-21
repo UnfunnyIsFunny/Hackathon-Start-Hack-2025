@@ -16,7 +16,7 @@ KEYWORDS_FILE = os.path.join(dirname, '../data_transfer/keywords.json')
 CONTENT_FILE = os.path.join(dirname, '../data_transfer/content.json') 
 FILINGS_FILE = os.path.join(dirname, '../data_transfer/filings.json')
 
-newsapi = NewsApiClient(api_key="7518dca56f314bef898357616ee86dc2")#"9d702e3dd4c845fb821fd11840eb3f6a")
+newsapi = NewsApiClient(api_key="7518dca56f314bef898357616ee86dc2")
 
 def load_keywords():
     keywords = []
@@ -25,13 +25,12 @@ def load_keywords():
     return keywords
 
 
-#collect articles with keywords every hours
 def fetch_specific():
 
     content = []
     keywords = load_keywords()      
     now = datetime.now(UTC)
-    yesterday = now - timedelta(days=1)  # Fixed: days=1 not day=1
+    yesterday = now - timedelta(days=1)
 
     from_date = yesterday.strftime("%Y-%m-%d")
     to_date = now.strftime("%Y-%m-%d")
@@ -71,7 +70,6 @@ def fetch_sec_filings():
 
     filings = queryApi.get_filings(query)
 
-    # Format filings into a list of dicts
     formatted_filings = []
     for filing in filings.get('filings', []):
         formatted_filings.append({

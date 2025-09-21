@@ -1,9 +1,7 @@
 import json as pyjson
 
-# Utility: convert comma-separated string or list to JSON list string
 def portfolios_to_json(portfolios):
     if isinstance(portfolios, str):
-        # Split by comma and strip whitespace
         items = [p.strip() for p in portfolios.split(',') if p.strip()]
     else:
         items = list(portfolios)
@@ -36,7 +34,6 @@ def article_list(request):
     sort = request.GET.get('sort', 'date')
     order = request.GET.get('order', 'desc')
     if sort == 'relevancy':
-        # Custom order for verdict
         ordering = ['highly relevant', 'relevant', 'somewhat relevant', 'not relevant']
         articles = list(Article.objects.all())
         articles.sort(key=lambda a: ordering.index(a.verdict) if a.verdict in ordering else 99)
@@ -84,7 +81,7 @@ def add_customer(request):
         portfolio_form = PortfolioForm(request.POST, prefix="portfolio")
         if 'add_portfolio' in request.POST and portfolio_form.is_valid():
             portfolio_form.save()
-            form = CustomerForm()  # Reset form to show new portfolio
+            form = CustomerForm()
             portfolio_form = PortfolioForm(prefix="portfolio")
         elif form.is_valid():
             customer = form.save(commit=False)
