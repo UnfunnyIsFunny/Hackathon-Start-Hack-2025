@@ -6,13 +6,37 @@
         <div class="card shadow-sm">
             <div class="card-body">
                 <h2 class="mb-4">{{ customer.firstname }} {{ customer.lastname }}</h2>
+
+                <h5>Portfolios</h5>
+                {% regroup portfolios by category as portfolio_categories %}
                 <ul class="list-group mb-3">
-                    {% for portfolio in portfolios %}
-                        <li class="list-group-item"><a href="/portfolio/{{ portfolio.id }}/" target="_blank">{{ portfolio.name }}</a></li>
+                    {% for group in portfolio_categories %}
+                        <li class="list-group-item">
+                            <strong>
+                                {% if group.grouper %}
+                                    {{ group.grouper.name }}
+                                {% else %}
+                                    Uncategorized
+                                {% endif %}
+                            </strong>
+                            <ul class="ms-3 mt-2">
+                                {% for portfolio in group.list %}
+                                    <li>
+                                        <a href="/portfolio/{{ portfolio.id }}/" target="_blank">{{ portfolio.name }}</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </li>
                     {% empty %}
                         <li class="list-group-item">No portfolios found.</li>
                     {% endfor %}
                 </ul>
+
+                <!-- Button to add new investments -->
+                <a href="{% url 'add_investment' customer.id %}" class="btn btn-primary mb-3">
+                    Add Investment
+                </a>
+
                 <a href="{% url 'home' %}" class="btn btn-secondary">Back to Dashboard</a>
             </div>
         </div>
