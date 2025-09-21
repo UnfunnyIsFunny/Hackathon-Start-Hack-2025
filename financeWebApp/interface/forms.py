@@ -17,4 +17,4 @@ from .models import Portfolio
 class PortfolioForm(forms.ModelForm):
     class Meta:
         model = Portfolio
-        fields = ['name', 'assets']
+        fields = ['name', 'assets', 'category']
