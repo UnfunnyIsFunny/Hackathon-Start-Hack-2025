@@ -2,34 +2,83 @@
 {% block title %}Add Customer{% endblock %}
 {% block content %}
 <div class="row justify-content-center">
-    <div class="col-md-6">
+    <div class="col-md-8">
         <div class="card shadow-sm">
             <div class="card-body">
                 <h2 class="mb-4">Add Customer</h2>
+
+                <!-- Main Customer Form -->
                 <form method="POST">
                     {% csrf_token %}
-                    {{ form.as_p }}
-                                <button type="submit" class="btn btn-primary">Add Customer</button>
-                                <a href="{% url 'home' %}" class="btn btn-secondary ms-2">Back to Home</a>
-                            </form>
-                                    <hr>
-                                    <div class="bg-light rounded-3 p-3 mt-4" style="box-shadow: 0 1px 4px rgba(135,150,165,0.08);">
-                                        <h6 class="mb-2" style="color:#495867;"><i class="fa-solid fa-briefcase me-1"></i> Add New Portfolio</h6>
-                                        <form method="POST" class="row g-2 align-items-end mb-0">
-                                            {% csrf_token %}
-                                                        <div class="col-auto">
-                                                            {{ portfolio_form.name.label_tag }}
-                                                            {{ portfolio_form.name }}
-                                                        </div>
-                                                        <div class="col-auto">
-                                                            {{ portfolio_form.assets.label_tag }}
-                                                            {{ portfolio_form.assets }}
-                                                        </div>
-                                            <div class="col-auto">
-                                                <button type="submit" name="add_portfolio" class="btn btn-outline-primary btn-sm">Add Portfolio</button>
-                                            </div>
-                                        </form>
-                                    </div>
+
+                    <!-- Render only the fields we want from the form -->
+                    {{ form.name.label_tag }} {{ form.name }}
+                    {{ form.email.label_tag }} {{ form.email }}
+                    {{ form.phone.label_tag }} {{ form.phone }}
+                    <!-- Don't render form.portfolio here, we handle it manually -->
+
+                    <!-- Portfolio Selection grouped by category -->
+                    <h5 class="mt-3">Select Portfolios</h5>
+                    <div class="mb-3">
+                        {% regroup portfolios by category as portfolio_categories %}
+                        {% for group in portfolio_categories %}
+                            <h6 class="mt-2">
+                                {% if group.grouper %}
+                                    {{ group.grouper.name }}
+                                {% else %}
+                                    Uncategorized
+                                {% endif %}
+                            </h6>
+                            {% for portfolio in group.list %}
+                                <div class="form-check ms-3">
+                                    <input class="form-check-input" type="checkbox" 
+                                           name="portfolio" 
+                                           id="portfolio{{ portfolio.id }}" 
+                                           value="{{ portfolio.id }}">
+                                    <label class="form-check-label" for="portfolio{{ portfolio.id }}">
+                                        {{ portfolio.name }}
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        {% empty %}
+                            <p>No portfolios available yet.</p>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Submit Buttons -->
+                    <button type="submit" class="btn btn-primary">Add Customer</button>
+                    <a href="{% url 'home' %}" class="btn btn-secondary ms-2">Back to Home</a>
+                </form>
+
+                <hr>
+
+                <!-- Inline Add Portfolio Form -->
+                <div class="bg-light rounded-3 p-3 mt-4" style="box-shadow: 0 1px 4px rgba(135,150,165,0.08);">
+                    <h6 class="mb-2" style="color:#495867;">
+                        <i class="fa-solid fa-briefcase me-1"></i> Add New Portfolio
+                    </h6>
+                    <form method="POST" class="row g-2 align-items-end mb-0">
+                        {% csrf_token %}
+                        <div class="col-auto">
+                            {{ portfolio_form.name.label_tag }}
+                            {{ portfolio_form.name }}
+                        </div>
+                        <div class="col-auto">
+                            {{ portfolio_form.assets.label_tag }}
+                            {{ portfolio_form.assets }}
+                        </div>
+                        <div class="col-auto">
+                            {{ portfolio_form.category.label_tag }}
+                            {{ portfolio_form.category }}
+                        </div>
+                        <div class="col-auto">
+                            <button type="submit" name="add_portfolio" class="btn btn-outline-primary btn-sm">
+                                Add Portfolio
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
             </div>
         </div>
     </div>
