@@ -1,21 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ customer.firstname }} {{ customer.lastname }} - Portfolio</title>
-</head>
-<body>
-    <h1>{{ customer.firstname }} {{ customer.lastname }}</h1>
-     {% for portfolio in portfolios %}
-                            <li><a href="/portfolio/{{ portfolio.id }}/" target="_blank">{{ portfolio.name }}</a></li>
-                            {% empty %}
-                            <li>No portfolios found.</li>
-                            {% endfor %}
-    
-
-    <!-- You can expand this section with real portfolio data like equities, FX, etc. -->
-    <!-- For example, you could have a list or table here if needed -->
-
-    <a href="{% url 'home' %}"><button>Back to Dashboard</button></a>
-</body>
-</html>
+{% extends "base.html" %}
+{% block title %}Customer Detail{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h2 class="mb-4">{{ customer.firstname }} {{ customer.lastname }}</h2>
+                <ul class="list-group mb-3">
+                    {% for portfolio in portfolios %}
+                        <li class="list-group-item"><a href="/portfolio/{{ portfolio.id }}/" target="_blank">{{ portfolio.name }}</a></li>
+                    {% empty %}
+                        <li class="list-group-item">No portfolios found.</li>
+                    {% endfor %}
+                </ul>
+                <a href="{% url 'home' %}" class="btn btn-secondary">Back to Dashboard</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

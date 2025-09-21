@@ -21,6 +21,7 @@ from interface import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
+    path('articles/', views.article_list, name='article_list'),
     path('portfolio/<int:portfolio_id>/', views.view_portfolio, name='view_portfolio'),
     path('add-customer/', views.add_customer, name='add_customer'),
     path('delete-customers/', views.bulk_delete_customers, name='bulk_delete_customers'),
