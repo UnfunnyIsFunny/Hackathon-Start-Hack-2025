@@ -21,3 +21,10 @@ class Customer(models.Model):
     lastname = models.CharField(max_length=100)
     portfolio = models.JSONField()
     
+class Filing(models.Model):
+    company = models.CharField(max_length=200)
+    content = models.TextField()
+    url = models.URLField(max_length=200)
+    date = models.DateTimeField(auto_now_add=True)
+    portfolio = models.TextField()
+    verdict = models.CharField(max_length=100, blank=True, null=True)

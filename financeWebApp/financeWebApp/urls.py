@@ -25,4 +25,5 @@ urlpatterns = [
     path('add-customer/', views.add_customer, name='add_customer'),
     path('delete-customers/', views.bulk_delete_customers, name='bulk_delete_customers'),
     path('customer/<int:pk>/', views.customer_detail, name='customer_detail'),
+    path('filings/', views.filing_list, name='filing_list'),
 ]

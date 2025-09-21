@@ -6,7 +6,6 @@ sys.path.append('..')
 sys.path.append('...')
 from .backend import fetch_data, process_data 
 from ... import models
-
 import asyncio
 
 class Command(BaseCommand):
@@ -19,11 +18,9 @@ class Command(BaseCommand):
                 # This is where your long-running method is called
                 fetch_data.load_keywords()
                 fetch_data.fetch_specific()
+                fetch_data.fetch_sec_filings()
                 for portfolio in models.Portfolio.objects.all():
                     asyncio.run(process_data.main(portfolio))
-                
                 time.sleep(3600)
-
-            
         except KeyboardInterrupt:
             self.stdout.write(self.style.WARNING('Service stopped by user.'))

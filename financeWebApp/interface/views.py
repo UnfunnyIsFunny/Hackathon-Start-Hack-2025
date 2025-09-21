@@ -1,5 +1,20 @@
 from django.shortcuts import render
-from .models import Article, Customer, Portfolio
+from .models import Article, Customer, Portfolio, Filing
+def filing_list(request):
+    sort = request.GET.get('sort', 'date')
+    order = request.GET.get('order', 'desc')
+    if sort == 'verdict':
+        ordering = ['highly relevant', 'relevant', 'somewhat relevant', 'not relevant']
+        filings = list(Filing.objects.all())
+        filings.sort(key=lambda f: ordering.index(f.verdict) if f.verdict in ordering else 99)
+        if order == 'desc':
+            filings = filings[::-1]
+    else:
+        filings = Filing.objects.all().order_by('-date' if order == 'desc' else 'date')
+    paginator = Paginator(filings, 20)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'filing_list.html', {'page_obj': page_obj, 'sort': sort, 'order': order})
 import json
 from django.core.paginator import Paginator
 from .forms import CustomerForm

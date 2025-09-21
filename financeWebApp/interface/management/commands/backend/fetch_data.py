@@ -7,9 +7,14 @@ import sys
 sys.path.append('....')
 from ....models import Portfolio
 import string
+import requests
+from sec_api import QueryApi,RenderApi
+import trafilatura
+
 dirname = os.path.dirname(__file__)
 KEYWORDS_FILE = os.path.join(dirname, '../data_transfer/keywords.json')
 CONTENT_FILE = os.path.join(dirname, '../data_transfer/content.json') 
+FILINGS_FILE = os.path.join(dirname, '../data_transfer/filings.json')
 
 newsapi = NewsApiClient(api_key="7518dca56f314bef898357616ee86dc2")#"9d702e3dd4c845fb821fd11840eb3f6a")
 
@@ -53,5 +58,32 @@ def fetch_specific():
     with open(CONTENT_FILE, 'w') as f:
         json.dump(content, f)
     
+def fetch_sec_filings():
+    api = "bba9312593e9ddba5774fa1cef849567d28833bb07d900cd0a9d2ad5b37c4c91"
+    queryApi = QueryApi(api_key=api)
+    renderApi = RenderApi(api_key=api)
+    query = {
+    "query": "formType:\"8-K\" AND items:\"9.01\"",
+    "from": "0",
+    "size": "10",
+    "sort": [{ "filedAt": { "order": "desc" } }]
+    }
 
-fetch_specific()
+    filings = queryApi.get_filings(query)
+
+    # Format filings into a list of dicts
+    formatted_filings = []
+    for filing in filings.get('filings', []):
+        formatted_filings.append({
+            'companyName': filing.get('companyName'),
+            'date': filing.get('filedAt'),
+            'documentUrl': filing.get('linkToHtml'),
+            'content' : trafilatura.extract(renderApi.get_file(url=filing.get('linkToHtml')).encode('utf-8'), include_comments=False, include_tables=False)
+        })
+
+    with open(FILINGS_FILE, 'w') as f:
+        json.dump(formatted_filings, f)
+
+
+
+fetch_sec_filings()
