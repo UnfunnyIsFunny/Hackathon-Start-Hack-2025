@@ -1,5 +1,16 @@
+import json as pyjson
+
+# Utility: convert comma-separated string or list to JSON list string
+def portfolios_to_json(portfolios):
+    if isinstance(portfolios, str):
+        # Split by comma and strip whitespace
+        items = [p.strip() for p in portfolios.split(',') if p.strip()]
+    else:
+        items = list(portfolios)
+    return pyjson.dumps(items)
 from django.shortcuts import render
 from .models import Article, Customer, Portfolio, Filing
+from .forms import PortfolioForm
 def filing_list(request):
     sort = request.GET.get('sort', 'date')
     order = request.GET.get('order', 'desc')
@@ -65,15 +76,26 @@ def home(request):
     customers = Customer.objects.all()
     return render(request, "home.html", {"customers": customers})
 
+    
 def add_customer(request):
     if request.method == "POST":
+        selected_portfolios = request.POST.getlist('portfolio')
         form = CustomerForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('home')  # Redirect to home page after adding
+        portfolio_form = PortfolioForm(request.POST, prefix="portfolio")
+        if 'add_portfolio' in request.POST and portfolio_form.is_valid():
+            portfolio_form.save()
+            form = CustomerForm()  # Reset form to show new portfolio
+            portfolio_form = PortfolioForm(prefix="portfolio")
+        elif form.is_valid():
+            customer = form.save(commit=False)
+            portfolios = Portfolio.objects.filter(id__in=selected_portfolios)
+            customer.portfolio = portfolios_to_json([p.name for p in portfolios])
+            customer.save()
+            return redirect('home')
     else:
         form = CustomerForm()
-    return render(request, "add_customer.html", {"form": form})
+        portfolio_form = PortfolioForm(prefix="portfolio")
+    return render(request, "add_customer.html", {"form": form, "portfolio_form": portfolio_form})
 
 def bulk_delete_customers(request):
     if request.method == "POST":

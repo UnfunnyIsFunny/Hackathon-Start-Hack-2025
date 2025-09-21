@@ -19,7 +19,7 @@ class Portfolio(models.Model):
 class Customer(models.Model):
     firstname = models.CharField(max_length=100)
     lastname = models.CharField(max_length=100)
-    portfolio = models.JSONField()
+    portfolio = models.TextField(help_text="Comma-separated list of portfolio names")
     
 class Filing(models.Model):
     company = models.CharField(max_length=200)

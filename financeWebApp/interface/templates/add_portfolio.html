@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Add Portfolio{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h2 class="mb-4">Add Portfolio</h2>
+        <form method="POST">
+          {% csrf_token %}
+          <div class="mb-3">
+            {{ form.name.label_tag }}
+            {{ form.name }}
+          </div>
+          <div class="mb-3">
+            {{ form.assets.label_tag }}
+            {{ form.assets }}
+          </div>
+          <button type="submit" class="btn btn-primary">Add Portfolio</button>
+          <a href="{% url 'home' %}" class="btn btn-secondary ms-2">Back to Home</a>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

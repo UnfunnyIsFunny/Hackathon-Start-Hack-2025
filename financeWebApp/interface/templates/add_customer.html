@@ -9,9 +9,27 @@
                 <form method="POST">
                     {% csrf_token %}
                     {{ form.as_p }}
-                    <button type="submit" class="btn btn-primary">Add Customer</button>
-                    <a href="{% url 'home' %}" class="btn btn-secondary ms-2">Back to Home</a>
-                </form>
+                                <button type="submit" class="btn btn-primary">Add Customer</button>
+                                <a href="{% url 'home' %}" class="btn btn-secondary ms-2">Back to Home</a>
+                            </form>
+                                    <hr>
+                                    <div class="bg-light rounded-3 p-3 mt-4" style="box-shadow: 0 1px 4px rgba(135,150,165,0.08);">
+                                        <h6 class="mb-2" style="color:#495867;"><i class="fa-solid fa-briefcase me-1"></i> Add New Portfolio</h6>
+                                        <form method="POST" class="row g-2 align-items-end mb-0">
+                                            {% csrf_token %}
+                                                        <div class="col-auto">
+                                                            {{ portfolio_form.name.label_tag }}
+                                                            {{ portfolio_form.name }}
+                                                        </div>
+                                                        <div class="col-auto">
+                                                            {{ portfolio_form.assets.label_tag }}
+                                                            {{ portfolio_form.assets }}
+                                                        </div>
+                                            <div class="col-auto">
+                                                <button type="submit" name="add_portfolio" class="btn btn-outline-primary btn-sm">Add Portfolio</button>
+                                            </div>
+                                        </form>
+                                    </div>
             </div>
         </div>
     </div>

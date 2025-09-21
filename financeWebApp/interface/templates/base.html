@@ -5,26 +5,114 @@
         <title>{% block title %}Finance Dashboard{% endblock %}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
         <style>
-                body { background: #f8f9fa; }
-                .navbar-brand { font-weight: bold; }
-                .container { max-width: 1200px; }
+            html {
+                scroll-behavior: smooth;
+            }
+            body {
+                background: linear-gradient(135deg, #f8f9fa 0%, #e3eaf2 100%);
+                min-height: 100vh;
+                transition: background 0.6s cubic-bezier(.4,0,.2,1);
+            }
+            .navbar-brand {
+                font-weight: bold;
+                letter-spacing: 1px;
+                color: #8796a5 !important;
+            }
+            .navbar {
+                box-shadow: 0 2px 8px rgba(135,150,165,0.08);
+                transition: box-shadow 0.3s;
+            }
+            .nav-link {
+                font-weight: 500;
+                transition: color 0.2s;
+            }
+            .nav-link:hover, .nav-link.active {
+                color: #495867 !important;
+            }
+            .container { max-width: 1200px; }
+            .main-highlight {
+                background: #8796a5;
+                color: #fff;
+                border-radius: 12px;
+                padding: 1.5rem;
+                margin-bottom: 2rem;
+                box-shadow: 0 4px 24px rgba(135,150,165,0.10);
+                animation: fadeInMain 0.7s cubic-bezier(.4,0,.2,1);
+            }
+            @keyframes fadeInMain {
+                from { opacity: 0; transform: translateY(30px); }
+                to { opacity: 1; transform: none; }
+            }
+            .card {
+                border-radius: 16px;
+                box-shadow: 0 2px 12px rgba(135,150,165,0.10);
+                transition: box-shadow 0.3s, transform 0.3s;
+                animation: fadeInCard 0.7s cubic-bezier(.4,0,.2,1);
+            }
+            .card:hover {
+                box-shadow: 0 8px 32px rgba(135,150,165,0.18);
+                transform: translateY(-2px) scale(1.01);
+            }
+            @keyframes fadeInCard {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: none; }
+            }
+            .btn, .form-control, .table, .pagination .page-link {
+                transition: all 0.2s cubic-bezier(.4,0,.2,1);
+            }
+            .btn-primary:active, .btn-primary:focus {
+                box-shadow: 0 0 0 0.2rem #8796a555;
+            }
+            .form-control:focus {
+                border-color: #8796a5;
+                box-shadow: 0 0 0 0.2rem #8796a533;
+            }
+            .table-hover tbody tr:hover {
+                background: #f0f4f8;
+                transition: background 0.2s;
+            }
+            h1, h2, h3, h4 {
+                color: #495867;
+                font-weight: 700;
+            }
+            .btn-primary {
+                background: #8796a5;
+                border: none;
+                font-weight: 600;
+                letter-spacing: 0.5px;
+            }
+            .btn-primary:hover {
+                background: #495867;
+            }
+            .table thead {
+                background: #e3eaf2;
+            }
+            .badge-portfolio {
+                background: #8796a5;
+                color: #fff;
+                font-size: 0.95em;
+                margin-right: 0.3em;
+            }
         </style>
 </head>
 <body>
-        <nav class="navbar navbar-expand-lg navbar-dark mb-4" style="background-color: #8796a5;">
+        <nav class="navbar navbar-expand-lg mb-4" style="background: #fff; border-bottom: 2px solid #8796a5;">
             <div class="container-fluid">
-                <a class="navbar-brand" href="/">Finance Dashboard</a>
+                <a class="navbar-brand d-flex align-items-center" href="/">
+                    <i class="fa-solid fa-chart-line me-2"></i> Finance Dashboard
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav">
-                        <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/articles/">All Articles</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/filings/">Filings</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/add-customer/">Add Customer</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/delete-customers/">Delete Customers</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/"><i class="fa-solid fa-house"></i> Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/articles/"><i class="fa-solid fa-newspaper"></i> All Articles</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/filings/"><i class="fa-solid fa-file-alt"></i> Filings</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/add-customer/"><i class="fa-solid fa-user-plus"></i> Add Customer</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/delete-customers/"><i class="fa-solid fa-user-minus"></i> Delete Customers</a></li>
                     </ul>
                 </div>
             </div>
