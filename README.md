@@ -9,10 +9,10 @@ along with degree of relevance and a summary of the article.
 ## How to use
 To run the application, first start the background service that fetches and processes data with 
 
-´´´bash
+```bash
   cd financeWebapp
   python manage.py run_fetch_server
   python manage.py run_server
-´´´
+```
 
 Note that the API Keys within the application are all free.
