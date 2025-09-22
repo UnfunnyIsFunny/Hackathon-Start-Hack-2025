@@ -9,7 +9,7 @@ along with degree of relevance and a summary of the article.
 ## How to use
 To run the application, first start the background service that fetches and processes data with 
 
-´´´
+´´´bash
   cd financeWebapp
   python manage.py run_fetch_server
   python manage.py run_server
